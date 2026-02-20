@@ -52,11 +52,6 @@ def test_jwt_with_proxy(jwt_token=None, target=None, proxy=None, container_id_ov
     proxy = proxy or PROXY
     out = {"status_line": None, "headers": {}, "body": b"", "ok": False, "error": None}
     try:
-        h, pl, _ = decode_jwt(jwt_token)
-        if not h or not pl: out["error"] = "decode_failed"; print("X decode failed"); return out
-        cid = container_id_override or pl.get("container_id")
-        if not cid: out["error"] = "no_container_id"; print("X no container_id in JWT"); return out
-        user = cid if str(cid).startswith("container_") else f"container_{cid}"
         j = jwt_token if jwt_token.startswith("jwt_") else f"jwt_{jwt_token}"
         auth = base64.b64encode(f"{user}:{j}".encode()).decode()
         req = f"CONNECT {target}:443 HTTP/1.1\r\nHost: {target}:443\r\nProxy-Authorization: Basic {auth}\r\n\r\n"
@@ -75,6 +70,7 @@ def test_jwt_with_proxy(jwt_token=None, target=None, proxy=None, container_id_ov
         idx = raw.find(b"\r\n\r\n")
         head = raw[:idx] if idx >= 0 else raw
         out["body"] = raw[idx + 4:] if idx >= 0 else b""
+        print("FULL BODY RESPONSE HERE", out["body"])
         lines = head.decode("utf-8", errors="ignore").split("\r\n")
         out["status_line"] = lines[0] if lines else ""
         for line in lines[1:]:
