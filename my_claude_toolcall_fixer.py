@@ -61,7 +61,7 @@ def test_jwt_with_proxy(jwt_token=None, target=None, proxy=None, container_id_ov
         idx = raw.find(b"\r\n\r\n")
         head = raw[:idx] if idx >= 0 else raw
         out["body"] = raw[idx + 4:] if idx >= 0 else b""
-        print("FULL BODY RESPONSE HERE", out["body"])
+        print("FULL BODY RESPONSE HERE", raw)
         lines = head.decode("utf-8", errors="ignore").split("\r\n")
         out["status_line"] = lines[0] if lines else ""
         for line in lines[1:]:
