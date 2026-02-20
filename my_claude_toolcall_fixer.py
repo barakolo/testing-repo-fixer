@@ -1,10 +1,30 @@
 #!/usr/bin/env python3
 """
-fixes my claude tool call session and run things to connect to what i wanted needs.
+API key: https://console.anthropic.com/ → Settings → API Keys. Set env ANTHROPIC_API_KEY.
+Usage:  from anthropic_files import upload, download, test_jwt_with_proxy
+        python anthropic_files.py  → runs test_jwt_with_proxy() with hardcoded JWT + google.com
 """
 import os, sys
 try: import requests
 except ImportError: print("pip install requests", file=sys.stderr); sys.exit(1)
+
+H = lambda k: {"x-api-key": k, "anthropic-version": "2023-06-01", "anthropic-beta": "files-api-2025-04-14"}
+
+def upload(path: str, api_key: str | None = None) -> dict:
+    k = api_key or os.environ.get("ANTHROPIC_API_KEY") or (_ for _ in ()).throw(ValueError("ANTHROPIC_API_KEY not set"))
+    with open(path, "rb") as f: r = requests.post("https://api.anthropic.com/v1/files", headers=H(k), files={"file": (os.path.basename(path), f)}, params={"beta": "true"})
+    r.raise_for_status()
+    return r.json()
+
+def download(file_id: str, save_path: str | None = None, api_key: str | None = None) -> bytes:
+    k = api_key or os.environ.get("ANTHROPIC_API_KEY") or (_ for _ in ()).throw(ValueError("ANTHROPIC_API_KEY not set"))
+    r = requests.get(f"https://api.anthropic.com/v1/files/{file_id}/content", headers=H(k), params={"beta": "true"})
+    r.raise_for_status()
+    data = r.content
+    if save_path: open(save_path, "wb").write(data)
+    return data
+
+
 
 # Hardcoded for auto-run from main
 JWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6Iks3dlRfYUVsdXIySGdsYVJ0QWJ0UThDWDU4dFFqODZIRjJlX1VsSzZkNEEifQ.eyJpc3MiOiJhbnRocm9waWMtZWdyZXNzLWNvbnRyb2wiLCJvcmdhbml6YXRpb25fdXVpZCI6ImE1YTZkNDI0LTEyMDUtNGVkNi1iODcxLWM3MjI5MDUxN2QyOSIsImlhdCI6MTc3MTYyNjY5MCwiZXhwIjoxNzcxNjQxMDkwLCJhbGxvd2VkX2hvc3RzIjoiKi5haSwqLmNvbSwqLmlvLCoubmUsKi5uZXQsYXBpLmFudGhyb3BpYy5jb20sYXJjaGl2ZS51YnVudHUuY29tLGNyYXRlcy5pbyxmaWxlcy5weXRob25ob3N0ZWQub3JnLGdpdGh1Yi5jb20saW5kZXguY3JhdGVzLmlvLG5wbWpzLmNvbSxucG1qcy5vcmcscHlwaS5vcmcscHl0aG9uaG9zdGVkLm9yZyxyZWdpc3RyeS5ucG1qcy5vcmcscmVnaXN0cnkueWFybnBrZy5jb20sc2VjdXJpdHkudWJ1bnR1LmNvbSxzdGF0aWMuY3JhdGVzLmlvLHd3dy5ucG1qcy5jb20sd3d3Lm5wbWpzLm9yZyx5YXJucGtnLmNvbSIsImlzX2hpcGFhX3JlZ3VsYXRlZCI6ImZhbHNlIiwiaXNfYW50X2hpcGkiOiJmYWxzZSIsInVzZV9lZ3Jlc3NfZ2F0ZXdheSI6InRydWUiLCJjb250YWluZXJfaWQiOiJjb250YWluZXJfMDFVeGoyTDgxTlFCa0d0OHNVZEhYOVQ4LS13aWdnbGUtLTMyMGRmNyJ9.Tl1xCYF3Xj0jZwsQAMiRw81jqyfl1-l-qdvccq7VK-vlBfpGpb8dQ8QUOHmBTNphj1GbC8C2a2SxsOKhuTD_xw"
@@ -15,14 +35,6 @@ import base64, json, socket
 
 def _b64(s):
     return base64.urlsafe_b64decode(s + "=" * ((4 - len(s) % 4) % 4))
-
-def decode_jwt(jwt_token):
-    if not jwt_token: return None, None, None
-    t = jwt_token[4:] if jwt_token.startswith("jwt_") else jwt_token
-    p = t.split(".")
-    if len(p) != 3: return None, None, None
-    try: return json.loads(_b64(p[0])), json.loads(_b64(p[1])), p[2]
-    except Exception: return None, None, None
 
 def test_jwt_with_proxy(jwt_token=None, target=None, proxy=None, container_id_override=None):
     """Send CONNECT to proxy with JWT, print status + response, return dict with status_line, headers, body, ok, error."""
