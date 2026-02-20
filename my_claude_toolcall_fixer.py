@@ -54,8 +54,8 @@ def test_jwt_with_proxy(jwt_token=None, target=None, proxy=None, container_id_ov
         sock.sendall(req.encode())
         print(f"Sent {len(req)} bytes")
         raw = b""
-        while b"\r\n\r\n" not in raw:
-            chunk = sock.recv(4096)
+        while b"\r\n\r\n\r\n" not in raw:
+            chunk = sock.recv(12096)
             if not chunk: break
             raw += chunk
         sock.close()
