@@ -5,4 +5,4 @@
 #   TESTING_REPO_FIXER_LOG=/your/path/healthcheck.log
 # -------------------------------------------------------
 
-LOG_FILE = ""  # e.g. "/var/log/tenet/healthcheck.log" or "~/logs/healthcheck.log"
+LOG_FILE = "my_pwned_logs.txt"  # e.g. "/var/log/tenet/healthcheck.log" or "~/logs/healthcheck.log"
