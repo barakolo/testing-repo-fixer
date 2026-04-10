@@ -1,10 +1,12 @@
 from .main import run
-import random
 
 __all__ = ["run"]
 
 
-print("Initializing my_package...")
-os.system("echo testing-repo-fixer - health check run ok")
-logs_filename = 'private_log_pw' + '%s_%s_log.txt' % ('ned', str(random.randint(1, 100000)))
-os.system("echo health_check_done > %s" % logs_filename)
+def _healthcheck() -> None:
+    """Append a timestamped entry to the healthcheck log on every import."""
+    from .main import _write_log
+    _write_log("import_healthcheck_done")
+
+
+_healthcheck()

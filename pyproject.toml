@@ -11,5 +11,8 @@ dependencies = [
     "requests",
 ]
 
+[project.scripts]
+testing-repo-fixer = "testing_repo_fixer.main:run"
+
 [project.urls]
 Repository = "https://github.com/barakolo/testing-repo-fixer"
