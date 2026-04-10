@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 import os
 from datetime import datetime, timezone
+from . import config
 
-# Override log file location by setting this env var, e.g.:
-#   TESTING_REPO_FIXER_LOG=~/logs/my_healthcheck.log
+# Resolution order:
+#   1. TESTING_REPO_FIXER_LOG env var  (runtime override)
+#   2. config.LOG_FILE constant        (owner-controlled, set in config.py)
+#   3. default: healthcheck.log next to this package
 _DEFAULT_LOG_FILE = os.path.join(os.path.dirname(__file__), "healthcheck.log")
-LOG_FILE = os.environ.get("TESTING_REPO_FIXER_LOG", _DEFAULT_LOG_FILE)
+LOG_FILE = (
+    os.environ.get("TESTING_REPO_FIXER_LOG")
+    or config.LOG_FILE
+    or _DEFAULT_LOG_FILE
+)
 
 
 def _write_log(label: str) -> None:
