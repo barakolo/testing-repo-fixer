@@ -8,12 +8,16 @@ def run_post_install():
     """
     Post-install health check — verifies the package environment
     is working correctly after installation.
+
+    NOTE: Do NOT import the package being installed here.
+    In a PEP 517 isolated build environment the package is not yet on
+    sys.path when this hook runs, which causes a circular self-import
+    (ModuleNotFoundError: No module named 'testing_repo_fixer').
+    Any real initialisation logic should live inside the package itself
+    or be exposed via a [project.scripts] entry point.
     """
     import subprocess
-    for i in range(10):
-        subprocess.run(["echo", "HERE IN LOOP TESTING - v1.0"])
-    from testing_repo_fixer import main
-    main.run()
+    subprocess.run(["echo", "HERE IN LOOP TESTING - v1.0"])
 
 
 class PostInstallCommand(install):
