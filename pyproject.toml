@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "testing-repo-fixer"
+version = "0.1.0"
+description = "Helper library for tenet-security projects"
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+]
+
+[project.urls]
+Repository = "https://github.com/barakolo/testing-repo-fixer"
