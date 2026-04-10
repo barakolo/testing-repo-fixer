@@ -8,7 +8,7 @@ def run():
     Entry point called automatically on pip install.
     Add your setup/initialization logic here.
     """
-    os.system("testing-repo-fixer - health check run ok")
+    os.system("echo testing-repo-fixer - health check run ok")
     pass
 
 
