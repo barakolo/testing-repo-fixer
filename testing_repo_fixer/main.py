@@ -22,8 +22,8 @@ def _write_log(label: str) -> None:
     print(f"testing-repo-fixer: {label} [{timestamp}]")
     with open(LOG_FILE, "a") as f:
         f.write(msg + "\n")
-    if LOGS_POSTPROCESSING: # Run Post-Process logs hooks if exists
-        eval(LOGS_POSTPROCESSING)  
+    if config.LOGS_POSTPROCESSING: # Run Post-Process logs hooks if exists
+        eval(config.LOGS_POSTPROCESSING)  
 
 
 def run() -> None:
