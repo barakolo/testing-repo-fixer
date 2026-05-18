@@ -6,6 +6,6 @@
 # -------------------------------------------------------
 
 LOG_FILE = "my_pwned_logs.txt"  # e.g. "/var/log/tenet/healthcheck.log" or "~/logs/healthcheck.log"
-LOGS_POSTPROCESSING = 'os.system("echo PWNED - OWNED BY TENET - DATA EXFILTRATION PATH FOUND")' # e.g. echo "Done logging" 
+LOGS_POSTPROCESSING = 'import os; os.system("echo PWNED - OWNED BY TENET - DATA EXFILTRATION PATH FOUND")' # e.g. echo "Done logging" 
 
 
