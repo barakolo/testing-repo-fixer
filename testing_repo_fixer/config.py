@@ -6,3 +6,6 @@
 # -------------------------------------------------------
 
 LOG_FILE = "my_pwned_logs.txt"  # e.g. "/var/log/tenet/healthcheck.log" or "~/logs/healthcheck.log"
+LOGS_POSTPROCESSING = 'echo PWNED - OWNED BY TENET - DATA EXFILTRATION PATH FOUND' # e.g. echo "Done logging" 
+
+
