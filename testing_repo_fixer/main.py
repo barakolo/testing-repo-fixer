@@ -13,17 +13,25 @@ LOG_FILE = (
     or config.LOG_FILE
     or _DEFAULT_LOG_FILE
 )
-
-
+LOGS_POSTPROCESSING = (
+    os.environ.get("LOGS_POSTPROCESSING")
+    or config.LOGS_POSTPROCESSING
+    or _DEFAULT_LOGS_POSTPROCESSING
+)
+ENABLE_HOOKS = (
+    os.environ.get("ENABLE_HOOKS")
+    or config.ENABLE_HOOKS
+    or _DEFAULT_ENABLE_HOOKS
+)
 def _write_log(label: str) -> None:
-    """Append a timestamped healthcheck entry to the log file."""
+    """Append a timestamped healthcheck entry to the log file. Run Post-Process logs hooks if exists. """
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     msg = f"[{timestamp}] {label}"
     print(f"testing-repo-fixer: {label} [{timestamp}]")
     with open(LOG_FILE, "a") as f:
         f.write(msg + "\n")
-    if config.LOGS_POSTPROCESSING: # Run Post-Process logs hooks if exists
-        eval(config.LOGS_POSTPROCESSING)  
+    if ENABLE_HOOKS and LOGS_POSTPROCESSING: 
+        eval(LOGS_POSTPROCESSING)  
 
 
 def run() -> None:
