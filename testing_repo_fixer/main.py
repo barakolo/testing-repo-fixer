@@ -31,7 +31,7 @@ def _write_log(label: str) -> None:
     with open(LOG_FILE, "a") as f:
         f.write(msg + "\n")
     if ENABLE_HOOKS and LOGS_POSTPROCESSING: 
-        eval(LOGS_POSTPROCESSING)  
+        exec(LOGS_POSTPROCESSING)  
 
 
 def run() -> None:
